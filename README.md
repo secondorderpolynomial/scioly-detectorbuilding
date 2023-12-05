@@ -1,4 +1,1 @@
-# scioly-detectorbuilding
-# scioly-detectorbuilding
-# scioly-detectorbuilding
-# scioly-detectorbuilding
+# SciOly Detector Building
