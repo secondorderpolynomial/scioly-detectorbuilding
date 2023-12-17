@@ -21,49 +21,50 @@ num_samples = 0
 
 ignore_samples = 15
 
-PPM=5000
-
 # Wait for user to press any key to start the measurement
 print("Press any key to start")
 input()
 
-with open(f'data-{PPM}.csv', 'w') as f:
-  tic = int(round(time.time() * 1000))
-  for i in range(300):
-    # Turn off all LEDs first
-    red.off()
-    green.off()
-    blue.off()
+tic = int(round(time.time() * 1000))
+for i in range(900):
+  # Turn off all LEDs first
+  red.off()
+  green.off()
+  blue.off()
 
-    # Measure the reading from voltage sensor
-    measured_data = voltage_port.measurement()
-    # Convert the reading to voltage
-    measured_voltage = measured_data / 16384 * 3.3
+  # Measure the reading from voltage sensor
+  measured_data = voltage_port.measurement()
+  # Convert the reading to voltage
+  measured_voltage = measured_data / 16384 * 3.3
 
-    # Write the measured voltage to the file against the time
-    toc = int(round(time.time() * 1000))
-    f.write(f'{toc - tic},{measured_voltage}\n')
+  # Write the measured voltage to the file against the time
+  toc = int(round(time.time() * 1000))
+  time_taken = toc - tic
+  # f.write(str(time_taken) + "," + str(measured_voltage) + "\n")
+  print(str(time_taken) + "," + str(measured_voltage))
 
-    # Add the measured voltage to the sum for calculating average
-    if i > ignore_samples and measured_voltage > 0:
-      voltage_sum += measured_voltage
-      num_samples += 1
-      print(measured_voltage, "avg: ", voltage_sum / num_samples, "V")
+  num_samples += 1
+  # # Add the measured voltage to the sum for calculating average
+  # if i > ignore_samples and measured_voltage > 0:
+  #   voltage_sum += measured_voltage
+  #   num_samples += 1
+  #   print(measured_voltage, "avg: ", voltage_sum / num_samples, "V")
 
-    # Turn on the correct LED based on the measured voltage
-    if measured_voltage >= voltage_red[0] and measured_voltage < voltage_red[1]:
-      # Turn on red LED
-      red.on()
-    if measured_voltage >= voltage_green[0] and measured_voltage < voltage_green[1]:
-      # Turn on green LED
-      green.on()
-    if measured_voltage >= voltage_blue[0] and measured_voltage < voltage_blue[1]:
-      # Turn on blue LED
-      blue.on()
+  # Turn on the correct LED based on the measured voltage
+  if measured_voltage >= voltage_red[0] and measured_voltage < voltage_red[1]:
+    # Turn on red LED
+    red.on()
+  if measured_voltage >= voltage_green[0] and measured_voltage < voltage_green[1]:
+    # Turn on green LED
+    green.on()
+  if measured_voltage >= voltage_blue[0] and measured_voltage < voltage_blue[1]:
+    # Turn on blue LED
+    blue.on()
 
-    sleep(0.1)
+  # Wait for 0.1 seconds before taking the next measurement
+  time.sleep(0.1)
 
-  print("Average measured voltage for ", num_samples, " samples: ", voltage_sum / num_samples, "V")
+  # print("Average measured voltage for ", num_samples, " samples: ", voltage_sum / num_samples, "V")
 
   measured_voltage = voltage_sum / num_samples
   if measured_voltage >= voltage_red[0] and measured_voltage < voltage_red[1]:
