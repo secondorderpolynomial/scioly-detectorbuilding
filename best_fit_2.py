@@ -28,7 +28,7 @@ def analyze_and_plot(file_names):
       # file is of the form '2000ppm.csv'
       concentration = file.split('ppm')[0]
       data = pd.read_csv(file, header=0)
-      # data = data[data['timems'] < 125_000]
+      data = data.sort_values(by=['timems'])
 
       timems = data['timems'].values
       timems = timems / 1000
